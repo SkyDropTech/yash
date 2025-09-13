@@ -1,93 +1,336 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>AIT Campus Crowd Density Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkyDrop - Crowd Tracker</title>
+
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f8f9fa;
+      font-family: 'Inter', sans-serif;
+      background-color: #0d0d0d;
+      color: #fff;
+      line-height: 1.6;
       text-align: center;
     }
-    canvas {
-      border: 2px solid #444;
-      max-width: 95%;
-      height: auto;
-      cursor: pointer;
-    }
-    .info {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
 
-  <h1>Army Institute of Technology - Crowd Density</h1>
-  <canvas id="campusMap" width="800" height="800"></canvas>
-  <div class="info" id="infoBox">Click on a hotspot to view crowd density</div>
-
-  <script>
-    const canvas = document.getElementById('campusMap');
-    const ctx = canvas.getContext('2d');
-    const infoBox = document.getElementById('infoBox');
-
-    // Load map image
-    const img = new Image();
-    img.src = 'WhatsApp Image 2025-09-13 at 12.14.17_ff07dae8.jpg'; // <-- put your image path here
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      drawHotspots();
-    };
-
-    // Hotspot data
-    const hotspots = [
-      { id: 1, name: "Mess", x: 600, y: 650, density: "Medium" },
-      { id: 2, name: "Library", x: 400, y: 500, density: "Low" },
-      { id: 3, name: "Administration", x: 400, y: 300, density: "High" },
-      { id: 4, name: "Football Ground", x: 200, y: 550, density: "Low" }
-    ];
-
-    function drawHotspots() {
-      hotspots.forEach(h => {
-        ctx.beginPath();
-        ctx.arc(h.x, h.y, 20, 0, 2 * Math.PI);
-        ctx.fillStyle = densityColor(h.density);
-        ctx.fill();
-        ctx.strokeStyle = "#000";
-        ctx.stroke();
-        ctx.fillStyle = "#fff";
-        ctx.font = "bold 14px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(h.id, h.x, h.y);
-      });
+    header {
+      background: rgba(13, 13, 13, 0.6);
+      backdrop-filter: blur(10px);
+      padding: 18px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 999;
+      box-shadow: 0 2px 6px #0008;
     }
 
-    function densityColor(density) {
-      switch (density) {
-        case "High": return "red";
-        case "Medium": return "orange";
-        case "Low": return "green";
-        default: return "gray";
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .logo img {
+      height: 70px;
+    }
+
+    .logo-text {
+      font-weight: 700;
+      opacity: 0;
+      transform: translateX(-60px);
+      animation: slideText 8s ease forwards;
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+      user-select: none;
+    }
+
+    @keyframes slideText {
+      to {
+        opacity: 1;
+        transform: translateX(0);
       }
     }
 
-    canvas.addEventListener('click', e => {
-      const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+    .logo-text .sky {
+      font-family: 'Londrina Solid', cursive;
+      color: #2592cd;
+      font-size: 50px;
+    }
 
-      hotspots.forEach(h => {
-        const dx = x - h.x;
-        const dy = y - h.y;
-        if (Math.sqrt(dx*dx + dy*dy) < 20) {
-          infoBox.textContent = ${h.name}: Crowd Density is ${h.density};
-        }
-      });
-    });
+    .logo-text .drop {
+      font-family: 'Londrina Shadow', cursive;
+      color: #ffffffde;
+      font-size: 36px;
+    }
+
+    nav {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 32px;
+    }
+
+    nav ul li a {
+      font-family: 'Londrina Solid', cursive;
+      font-size: 24px;
+      color: #d1d5db;
+      text-decoration: none;
+      transition: color 0.25s ease;
+      user-select: none;
+    }
+
+    nav ul li a:hover {
+      color: #1E90FF;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Londrina Solid', cursive;
+      font-size: 18px;
+      color: #fff;
+      user-select: none;
+    }
+
+    .user-profile img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #1E90FF;
+      box-shadow: 0 0 8px #1E90FFaa;
+    }
+
+    main {
+      padding: 130px 30px 60px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    h2 {
+      font-family: 'Londrina Solid', cursive;
+      font-size: 2.8rem;
+      letter-spacing: 2px;
+      margin-bottom: 40px;
+      text-shadow: 0 2px 8px #222a;
+      user-select: none;
+    }
+
+    .image-container {
+      position: relative;
+      max-width: 100%;
+      margin-bottom: 30px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px #111;
+      border: 3px solid #1E90FF;
+      background: #111;
+    }
+
+    .image-container img {
+      width: 100%;
+      display: block;
+      border-radius: 16px;
+      object-fit: cover;
+    }
+
+    .crowd-info {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-family: 'Londrina Solid', cursive;
+      font-size: 1.5rem;
+      box-shadow: 0 0 15px #1E90FFcc;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .crowd-info.green {
+      background-color: #28a745cc;
+    }
+
+    .crowd-info.yellow {
+      background-color: #ffc107cc;
+      color: #000;
+    }
+
+    .crowd-info.red {
+      background-color: #dc3545cc;
+    }
+
+    .area-status {
+      font-family: 'Londrina Solid', cursive;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      text-shadow: 0 1px 3px #000c;
+      user-select: none;
+    }
+
+    .crowd-bar {
+      width: 90%;
+      max-width: 600px;
+      height: 40px;
+      border-radius: 20px;
+      background: #222;
+      margin: 0 auto 50px;
+      overflow: hidden;
+      box-shadow: inset 0 0 8px #000;
+    }
+
+    .crowd-level {
+      height: 100%;
+      border-radius: 20px 0 0 20px;
+      line-height: 40px;
+      font-weight: 700;
+      text-align: center;
+      transition: width 0.4s ease, background-color 0.4s ease;
+      user-select: none;
+      color: #000;
+    }
+
+    .green {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .yellow {
+      background-color: #ffc107;
+      color: black;
+    }
+
+    .red {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    @media (max-width: 600px) {
+      .logo-text .sky {
+        font-size: 36px;
+      }
+
+      .logo-text .drop {
+        font-size: 26px;
+      }
+
+      nav ul li a {
+        font-size: 18px;
+      }
+
+      .crowd-info {
+        font-size: 1.2rem;
+        padding: 10px 20px;
+      }
+
+      h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">
+      <img src="images/logosk.png" alt="SkyDrop Logo" />
+      <div class="logo-text">
+        <span class="sky">Sky</span>
+        <span class="drop">Drop</span>
+      </div>
+    </div>
+
+    <nav>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="skymedia.html">SkyMedia</a></li>
+        <li><a href="alumni1.html">Alumni</a></li>
+        <li><a href="crowd.html">Crowd Tracker</a></li>
+        <li><a href="#">SkyFood</a></li>
+        <li><a href="#">Notices</a></li>
+        <li><a href="#">About Us</a></li>
+      </ul>
+    </nav>
+
+    <div class="user-profile">
+      <img src="images/profilephoto1.png" alt="Rishikesh Profile" />
+      <span>Rishikesh</span>
+    </div>
+  </header>
+
+  <main>
+    <h2>Crowd Tracker - Army Institute of Technology Pune</h2>
+
+    <div class="image-container">
+      <img src="images/crowd1.png" alt="AIT Pune Crowd Map" />
+      <div id="crowd-info" class="crowd-info">Loading...</div>
+    </div>
+
+    <div class="area-status" id="mess-status-text">Mess Area Status: Loading...</div>
+
+    <div class="crowd-bar">
+      <div id="mess-crowd-bar" class="crowd-level" style="width: 0%;">0%</div>
+    </div>
+  </main>
+
+  <script>
+    // Simulated data for crowd in Mess area (%)
+    const maxCapacity = 100;
+    let currentPeople = 65; // Change this number to simulate different crowds
+
+    function updateCrowdDisplay() {
+      const percent = (currentPeople / maxCapacity) * 100;
+      const bar = document.getElementById('mess-crowd-bar');
+      const statusText = document.getElementById('mess-status-text');
+      const crowdInfo = document.getElementById('crowd-info');
+
+      bar.style.width = percent + '%';
+
+      let statusColor = '';
+      let statusMessage = '';
+
+      if (percent < 40) {
+        statusColor = 'green';
+        statusMessage = 'Not Crowded';
+      } else if (percent >= 40 && percent <= 70) {
+        statusColor = 'yellow';
+        statusMessage = 'Moderately Crowded';
+      } else {
+        statusColor = 'red';
+        statusMessage = 'Highly Crowded';
+      }
+
+      bar.className = 'crowd-level ' + statusColor;
+      crowdInfo.className = 'crowd-info ' + statusColor;
+
+      bar.textContent = `${percent.toFixed(0)}%`;
+      statusText.textContent = `Mess Area Status: ${statusMessage} (${percent.toFixed(0)}%)`;
+      crowdInfo.textContent = `Current crowd: ${percent.toFixed(0)}%`;
+    }
+
+    // Initialize on page load
+    updateCrowdDisplay();
   </script>
-
 </body>
 </html>
