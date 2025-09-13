@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AIT Campus Crowd Density Map</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      text-align: center;
+    }
+    canvas {
+      border: 2px solid #444;
+      max-width: 95%;
+      height: auto;
+      cursor: pointer;
+    }
+    .info {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Army Institute of Technology - Crowd Density</h1>
+  <canvas id="campusMap" width="800" height="800"></canvas>
+  <div class="info" id="infoBox">Click on a hotspot to view crowd density</div>
+
+  <script>
+    const canvas = document.getElementById('campusMap');
+    const ctx = canvas.getContext('2d');
+    const infoBox = document.getElementById('infoBox');
+
+    // Load map image
+    const img = new Image();
+    img.src = 'WhatsApp Image 2025-09-13 at 12.14.17_ff07dae8.jpg'; // <-- put your image path here
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      drawHotspots();
+    };
+
+    // Hotspot data
+    const hotspots = [
+      { id: 1, name: "Mess", x: 600, y: 650, density: "Medium" },
+      { id: 2, name: "Library", x: 400, y: 500, density: "Low" },
+      { id: 3, name: "Administration", x: 400, y: 300, density: "High" },
+      { id: 4, name: "Football Ground", x: 200, y: 550, density: "Low" }
+    ];
+
+    function drawHotspots() {
+      hotspots.forEach(h => {
+        ctx.beginPath();
+        ctx.arc(h.x, h.y, 20, 0, 2 * Math.PI);
+        ctx.fillStyle = densityColor(h.density);
+        ctx.fill();
+        ctx.strokeStyle = "#000";
+        ctx.stroke();
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 14px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(h.id, h.x, h.y);
+      });
+    }
+
+    function densityColor(density) {
+      switch (density) {
+        case "High": return "red";
+        case "Medium": return "orange";
+        case "Low": return "green";
+        default: return "gray";
+      }
+    }
+
+    canvas.addEventListener('click', e => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      hotspots.forEach(h => {
+        const dx = x - h.x;
+        const dy = y - h.y;
+        if (Math.sqrt(dx*dx + dy*dy) < 20) {
+          infoBox.textContent = ${h.name}: Crowd Density is ${h.density};
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

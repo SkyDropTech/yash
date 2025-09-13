@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&family=Londrina+Solid&family=Londrina+Shadow&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<title>SkyFood — FC Preorder</title>
+<style>
+* {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #0d0d0d;
+  color: #fff;
+  line-height: 1.6;
+  text-align: center;
+}
+header {
+  background: rgba(13,13,13,0.6);
+  backdrop-filter: blur(10px);
+  padding: 18px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+}
+.logo img {
+  height: 70px;
+}
+.logo-text {
+  font-weight: 700;
+  opacity: 0;
+  transform: translateX(-60px);
+  animation: slideText 8s ease forwards;
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  font-family: 'Londrina Solid', cursive;
+}
+@keyframes slideText {
+  to {
+    opacity: 1; transform: translateX(0);
+  }
+}
+.logo-text .sky {
+  color: #2592cd;
+  font-size: 50px;
+}
+.logo-text .drop {
+  color: #ffffffde;
+  font-size: 36px;
+  font-family: 'Londrina Shadow', cursive;
+}
+nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 32px;
+}
+nav ul li a {
+  font-family: 'Londrina Solid', cursive;
+  font-size: 24px;
+  color: #d1d5db;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+nav ul li a.active, nav ul li a:hover {
+  color: #1E90FF;
+}
+/* User Profile */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Londrina Solid', cursive;
+  font-size: 18px;
+  color: #fff;
+}
+.user-profile img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #1E90FF;
+}
+
+/* SkyFood Styles */
+.hero {
+  max-width: 1100px;
+  margin: 120px auto 20px;
+  padding: 20px;
+  text-align: center;
+  background: rgba(30,144,255,0.05);
+  border-radius: 12px;
+}
+.hero .moto {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1E90FF;
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto 40px;
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 20px;
+  padding: 0 20px;
+}
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(240px,1fr));
+  gap: 16px;
+}
+.card {
+  background: #121212;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #fff;
+}
+.thumb img {
+  width: 100%;
+  height: 140px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+.meta .title {
+  font-weight: 600;
+}
+.meta .price {
+  font-weight: 700;
+  color: #1E90FF;
+}
+.add {
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: #1E90FF;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+.add:hover {
+  opacity: 0.9;
+}
+
+aside.cart {
+  background: #121212;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #fff;
+}
+aside.cart h3 {
+  text-align: center;
+  color: #1E90FF;
+  margin: 0 0 10px;
+}
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.cart-item:last-child {
+  border-bottom: none;
+}
+.cart-item-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+.cart-total {
+  margin-top: 10px;
+  text-align: right;
+  font-weight: 700;
+  color: #1E90FF;
+}
+.place-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  background: #1E90FF;
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.place-btn:hover {
+  background-color: #0077e6;
+}
+
+footer {
+  background: #0d0d0d;
+  padding: 40px 20px;
+  text-align: center;
+  border-top: 1px solid #333;
+  color: #888;
+  font-size: 14px;
+  margin-top: 40px;
+}
+
+@media (max-width: 1024px) {
+  nav ul {
+    gap: 24px;
+  }
+  .logo-text .sky {
+    font-size: 40px;
+  }
+  .logo-text .drop {
+    font-size: 28px;
+  }
+  .hero .moto {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 900px) {
+  .feature-row {
+    flex-direction: column;
+    text-align: center;
+  }
+  .feature-media img {
+    max-width: 100%;
+  }
+  .feature-copy {
+    text-align: center;
+  }
+  .hero .moto {
+    font-size: 20px;
+  }
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">
+    <img src="images/logosk.png" alt="SkyDrop Logo" />
+    <div class="logo-text"><span class="sky">Sky</span><span class="drop">Drop</span></div>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="home.html">Home</a></li>
+      <li><a href="skymedia.html">SkyMedia</a></li>
+      <li><a href="alumni1.html">Alumni</a></li>
+      <li><a href="crowd.html">Crowd Tracker</a></li>
+      <li><a href="#" class="active">SkyFood</a></li>
+      <li><a href="#">Notices</a></li>
+      <li><a href="#">About Us</a></li>
+    </ul>
+  </nav>
+  <!-- User Profile -->
+  <div class="user-profile">
+    <img src="images/profilephoto1.png" alt="Rishikesh Profile" />
+    <span>Rishikesh</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="moto">Order food early — save time, eat fresh.</div>
+  <p>Pre-order from FC and pick up when ready or take it to hostel.</p>
+</section>
+
+<main>
+  <div class="menu-grid" id="menuGrid"></div>
+  <aside class="cart">
+    <h3>Your Cart</h3>
+    <div id="cartList"></div>
+    <div class="cart-total" id="cartTotal">Total: ₹0</div>
+    <button class="place-btn" id="placeOrderBtn">Place Order</button>
+  </aside>
+</main>
+
+<footer>© 2025 SkyDrop. All rights reserved.</footer>
+
+<script>
+const menu = [
+  {
+    id:'v1',
+    name:'Veg Burger',
+    price:80,
+    image:'https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg'
+  },
+  {
+    id:'v2',
+    name:'Paneer Wrap',
+    price:95,
+    image:'https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg'
+  },
+  {
+    id:'v3',
+    name:'Veg Biryani',
+    price:110,
+    image:'https://images.pexels.com/photos/357743/pexels-photo-357743.jpeg'
+  },
+  {
+    id:'n1',
+    name:'Chicken Biryani',
+    price:140,
+    image:'https://images.pexels.com/photos/551997/pexels-photo-551997.jpeg'
+  },
+  {
+    id:'n2',
+    name:'Fried Chicken',
+    price:150,
+    image:'https://images.pexels.com/photos/675951/pexels-photo-675951.jpeg'
+  }
+];
+
+let cart = {};
+const menuGrid = document.getElementById('menuGrid');
+const cartList = document.getElementById('cartList');
+const cartTotal = document.getElementById('cartTotal');
+
+function renderMenu() {
+  menuGrid.innerHTML = '';
+  menu.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <div class="thumb"><img src="${item.image}" alt="${item.name}"></div>
+      <div class="meta">
+        <div class="title">${item.name}</div>
+        <div class="price">₹${item.price}</div>
+      </div>
+      <button class="add" onclick="addToCart('${item.id}')">Add to Cart</button>
+    `;
+    menuGrid.appendChild(div);
+  });
+}
+
+function addToCart(id) {
+  cart[id] = (cart[id] || 0) + 1;
+  renderCart();
+}
+
+function removeFromCart(id) {
+  if (cart[id] > 0) {
+    cart[id]--;
+    if (cart[id] === 0) delete cart[id];
+  }
+  renderCart();
+}
+
+function renderCart() {
+  cartList.innerHTML = '';
+  let total = 0;
+  Object.keys(cart).forEach(id => {
+    const item = menu.find(m => m.id === id);
+    const subtotal = item.price * cart[id];
+    total += subtotal;
+
+    const row = document.createElement('div');
+    row.className = 'cart-item';
+    row.innerHTML = `
+      <div class="cart-item-name">${item.name} x${cart[id]}</div>
+      <div>₹${subtotal} <button onclick="removeFromCart('${id}')">-</button></div>
+    `;
+    cartList.appendChild(row);
+  });
+  cartTotal.textContent = `Total: ₹${total}`;
+}
+
+document.getElementById('placeOrderBtn').addEventListener('click', () => {
+  alert('Order placed!');
+  cart = {};
+  renderCart();
+});
+
+renderMenu();
+renderCart();
+</script>
+</body>
+</html>

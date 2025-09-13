@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Social Media UI Replica</title>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Londrina+Solid&display=swap" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* ---------- Reset ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0d0d0d;
+      color: #fff;
+      line-height: 1.4;
+    }
+    /* ---------- Left Sidebar ---------- */
+    .side-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 220px;
+      height: 100vh;
+      background-color: #0d0d0d;
+      border-right: 1px solid #222;
+      display: flex;
+      flex-direction: column;
+      padding: 15px 10px 10px 10px;
+      z-index: 1000;
+    }
+    .logo {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .logo img {
+      height: 55px;
+    }
+    nav {
+      flex: 1;
+      overflow-y: auto;
+      font-family: 'Londrina Solid', cursive;
+      scrollbar-width: thin;
+      scrollbar-color: #1E90FF #111;
+    }
+    nav::-webkit-scrollbar {
+      width: 6px;
+    }
+    nav::-webkit-scrollbar-track {
+      background: #111;
+    }
+    nav::-webkit-scrollbar-thumb {
+      background-color: #1E90FF;
+      border-radius: 3px;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    nav ul li {
+      text-align: left;
+    }
+    nav ul li a {
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13px;
+      color: #d1d5db;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      padding-left: 6px;
+      transition: color 0.3s ease;
+    }
+    nav ul li a:hover {
+      color: #1E90FF;
+    }
+    .bottom-menu {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      font-family: 'Londrina Solid', cursive;
+    }
+    .bottom-menu a {
+      color: #d1d5db;
+      font-weight: 600;
+      font-size: 13px;
+      padding-left: 6px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .bottom-menu a:hover {
+      color: #1E90FF;
+    }
+    /* ---------- Main Content ---------- */
+    .main-content {
+      position: fixed;
+      top: 0;
+      left: 220px;
+      right: 240px;
+      height: 100vh;
+      background-color: #121212;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    /* ---------- Right Sidebar ---------- */
+    .right-panel {
+      position: fixed;
+      top: 15px;
+      right: 0;
+      width: 240px;
+      height: calc(100vh - 30px);
+      background-color: #0d0d0d;
+      border-left: 1px solid #222;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 15px 15px 15px;
+      font-family: 'Londrina Solid', cursive;
+      font-size: 13px;
+      gap: 20px;
+    }
+    /* Contact header block */
+    .contact-header {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    /* Block below contacts for stories, notifications, birthdays */
+    .extras-area {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      border-top: 1px solid #222;
+      padding-top: 15px;
+      overflow-y: auto;
+      max-height: calc(100vh - 360px); /* Adjust height as needed */
+    }
+    /* ---------- Panel Sections ---------- */
+    .panel-section {
+      text-align: left;
+    }
+    .panel-section h3 {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 15px;
+      letter-spacing: 0.15em;
+    }
+    .favorites-list,
+    .contacts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+      max-height: 130px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #1E90FF #111;
+    }
+    .favorites-list::-webkit-scrollbar,
+    .contacts-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .favorites-list::-webkit-scrollbar-track,
+    .contacts-list::-webkit-scrollbar-track {
+      background: #111;
+    }
+    .favorites-list::-webkit-scrollbar-thumb,
+    .contacts-list::-webkit-scrollbar-thumb {
+      background-color: #1E90FF;
+      border-radius: 3px;
+    }
+    /* ---------- User Entries ---------- */
+    .user-entry {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .user-entry img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .user-entry.online::after {
+      content: "";
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #3ba55d;
+      border: 2px solid #0d0d0d;
+      top: 6px;
+      left: 24px;
+    }
+    .user-entry span {
+      font-weight: 600;
+    }
+    /* ---------- Stories ---------- */
+    .stories-section {
+      background-color: #121212;
+      border-radius: 10px;
+      padding: 15px;
+      height: 500px;
+    }
+    .stories-header {
+      font-family: 'Londrina Solid', cursive;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+    }
+    .stories-list {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+    }
+    .story-item {
+      background-color: #222;
+      border-radius: 12px;
+      width: 72px;
+      height: 120px;
+      position: relative;
+      flex: none;
+      cursor: pointer;
+    }
+    .story-thumb {
+      width: 72px;
+      height: 72px;
+      border-radius: 12px 12px 0 0;
+      object-fit: cover;
+    }
+    .story-user {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      width: 28px;
+      height: 28px;
+      border: 3px solid #1E90FF;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+    .story-user img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .story-caption {
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      padding: 8px 5px 0 5px;
+      color: #ccc;
+    }
+    /* ---------- Notifications ---------- */
+    .notification-section {
+      background-color: #222;
+      border-radius: 10px;
+      padding: 12px 15px;
+    }
+    .notification-header {
+      font-family: 'Londrina Solid', cursive;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 12px;
+      letter-spacing: 0.1em;
+      color: #fff;
+    }
+    .notification-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .notification-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .notification-item img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .notification-text {
+      color: #ccc;
+      font-size: 13px;
+      line-height: 1.2;
+    }
+    .notification-icon {
+      margin-left: auto;
+      font-size: 16px;
+      color: #1E90FF;
+    }
+    /* ---------- Birthdays ---------- */
+    .birthday-section {
+      background-color: #2a2a2a;
+      border-radius: 10px;
+      padding: 12px 15px;
+      font-family: 'Londrina Solid', cursive;
+      color: #eee;
+    }
+    .birthday-header {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 10px;
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .birthday-header img {
+      width: 20px;
+      height: 20px;
+    }
+    .birthday-list {
+      font-size: 13px;
+      color: #ccc;
+    }
+    /* ---------- Search Bar ---------- */
+    .search-contact {
+      display: flex;
+      gap: 6px;
+    }
+    .search-input {
+      flex: 1;
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: none;
+      background-color: #222;
+      color: #eee;
+      font-family: 'Londrina Solid', cursive;
+      font-size: 13px;
+      outline: none;
+    }
+    .search-input::placeholder {
+      color: #888;
+    }
+    .add-contact-btn {
+      background-color: #1E90FF;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 12px;
+      color: white;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: 'Londrina Solid', cursive;
+      white-space: nowrap;
+      transition: background-color 0.3s ease;
+    }
+    .add-contact-btn:hover {
+      background-color: #147acc;
+    }
+  </style>
+</head>
+<body>
+  <!-- Left Sidebar -->
+  <div class="side-header">
+    <div>
+      <div class="logo">
+        <img src="images/logosk.png" alt="LogoSK" />
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#">HOME</a></li>
+          <li><a href="#">DISCUSSION</a></li>
+          <li><a href="#">FRIENDS</a></li>
+          <li><a href="#">EVENTS</a></li>
+          <li><a href="#">VIDEOS</a></li>
+          <li><a href="#">PHOTOS</a></li>
+          <li><a href="#">FILES</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="bottom-menu">
+      <a href="#">SETTING</a>
+      <a href="#">LOG OUT</a>
+    </div>
+  </div>
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Placeholder -->
+  </div>
+  <!-- Right Sidebar -->
+  <div class="right-panel">
+    <!-- Contact Header Area -->
+    <div class="contact-header">
+      <div class="panel-section">
+        <h3>FAVOURITES</h3>
+        <div class="favorites-list">
+          <div class="user-entry online">
+            <img src="https://i.pravatar.cc/32?img=5" alt="Abhishek Shedge" />
+            <span>Abhishek Shedge</span>
+          </div>
+          <div class="user-entry online">
+            <img src="https://i.pravatar.cc/32?img=15" alt="Rishi Kumar Singh" />
+            <span>Rishi Kumar Singh</span>
+          </div>
+          <div class="user-entry">
+            <img src="https://i.pravatar.cc/32?img=7" alt="Vishal Singh" />
+            <span>Vishal Singh</span>
+          </div>
+        </div>
+      </div>
+      <div class="panel-section">
+        <h3>CONTACTS</h3>
+        <div class="contacts-list">
+          <div class="user-entry online">
+            <img src="https://i.pravatar.cc/32?img=30" alt="Roshan Kumar" />
+            <span>Roshan Kumar</span>
+          </div>
+          <div class="user-entry">
+            <img src="https://i.pravatar.cc/32?img=28" alt="User 2" />
+            <span>User 2</span>
+          </div>
+          <div class="user-entry">
+            <img src="https://i.pravatar.cc/32?img=29" alt="User 3" />
+            <span>User 3</span>
+          </div>
+          <div class="user-entry">
+            <img src="https://i.pravatar.cc/32?img=31" alt="User 4" />
+            <span>User 4</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Extras Area -->
+    <div class="extras-area">
+      <!-- Stories Section -->
+      <div class="stories-section">
+        <div class="stories-header">Stories</div>
+        <div class="stories-list" tabindex="0" aria-label="User stories">
+          <div class="story-item">
+            <img class="story-thumb" src="https://picsum.photos/72/72?random=1" alt="Story 1" />
+            <div class="story-user">
+              <img src="https://i.pravatar.cc/28?img=5" alt="Abhishek" />
+            </div>
+            <div class="story-caption">Abhishek</div>
+          </div>
+          <div class="story-item">
+            <img class="story-thumb" src="https://picsum.photos/72/72?random=2" alt="Story 2" />
+            <div class="story-user">
+              <img src="https://i.pravatar.cc/28?img=15" alt="Rishi" />
+            </div>
+            <div class="story-caption">Rishi</div>
+          </div>
+          <div class="story-item">
+            <img class="story-thumb" src="https://picsum.photos/72/72?random=3" alt="Story 3" />
+            <div class="story-user">
+              <img src="https://i.pravatar.cc/28?img=7" alt="Vishal" />
+            </div>
+            <div class="story-caption">Vishal</div>
+          </div>
+        </div>
+      </div>
+      <!-- Notification Section -->
+      <div class="notification-section">
+        <div class="notification-header">5 Event Invites</div>
+        <div class="notification-list">
+          <div class="notification-item">
+            <img src="https://cdn-icons-png.flaticon.com/512/2922/2922591.png" alt="Birthday Cake" />
+            <div class="notification-text"><strong>Yash Mishra's Birthday</strong></div>
+            <i class="fas fa-gift notification-icon" title="Gift"></i>
+          </div>
+          <div class="notification-item">
+            <img src="https://i.pravatar.cc/32?img=15" alt="Follower" />
+            <div class="notification-text"><strong>Rishi Kumar</strong> started following you</div>
+            <i class="fas fa-heart notification-icon" title="Like"></i>
+          </div>
+        </div>
+      </div>
+      <!-- Birthday Section -->
+      <div class="birthday-section">
+        <div class="birthday-header">
+          <img src="https://cdn-icons-png.flaticon.com/512/742/742751.png" alt="Birthday Icon" />
+          Birthdays Today
+        </div>
+        <div class="birthday-list">
+          <div>Roshan Kumar - <em>Today</em></div>
+          <div>Abhishek Shedge - <em>Today</em></div>
+        </div>
+      </div>
+    </div>
+    <!-- Search Contact -->
+    <div class="search-contact">
+      <input type="text" class="search-input" placeholder="Search contacts" />
+      <button class="add-contact-btn" aria-label="Add contact">Add Contact</button>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+1)Food order for fc
+3)Notice
+4) Branch wise resources, Assignments , Notes 
+5) Sign in Log in (add name surenmae too)
+6)Acedemics
+7)Alumini info(insta , facebook , linkedin )
+8)About Us
+9)App
+
+
+
+Acedemics 
+----------
+1) calender of month 
+2) To do list
+3) Topper class notes
+4) Books pdfs
+5) Academic performance
+
+
+new version:
+ 
+1) HOME PAGE
+2) SOCIAL MEDIA 
+3) ALUMNI
+4) CROWD TRACKER
+5) FOOD PREORDER
+6) NOTICES
+7) ABOUT US
+
+

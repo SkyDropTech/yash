@@ -1,0 +1,119 @@
+
+
+
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const favorites = [
+      {name:'Yash Mishra', handle:'@yashluffy', avatar:'profile.jpg'},
+      {name:'Atherva', handle:'@athervaCOOL', avatar:'profile.jpg'},
+      {name:'Sohan Rathodh', handle:'@sohaann', avatar:'profile.jpg'},
+      {name:'Abhishek', handle:'@abhiiii', avatar:'profile.jpg'}
+    ];
+
+    const initialPosts = [
+      {id:1,user:'OSS Club',handle:'@ossclub',time:'1h',text:'Check out our latest event video!',media:['videos/ossclub1.mp4']},
+      {id:2,user:'OSS Club',handle:'@ossclub',time:'2h',text:'Here is a cool event image!',media:['images/ossclubimg1.webp']}
+    ];
+
+    /* (Rest of your JS stays SAME as before — no changes) */
+    /* ========= DOM refs ========= */
+    const favList = document.getElementById('favList');
+    const feed = document.getElementById('feed');
+    const mediaInput = document.getElementById('mediaInput');
+    const previewWrap = document.getElementById('previewWrap');
+    const tweetText = document.getElementById('tweetText');
+    const postBtn = document.getElementById('postBtn');
+
+    document.querySelectorAll('.nav a').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        document.querySelectorAll('.nav a').forEach(x=>x.classList.remove('active'));
+        a.classList.add('active');
+      });
+    });
+
+    function renderFavs(){
+      if(!favList) return;
+      favList.innerHTML = '';
+      favorites.forEach(f=>{
+        const el = document.createElement('div');
+        el.className = 'contact';
+        el.innerHTML = `<img src="${f.avatar}" alt="${f.name}" /><div style="display:flex;flex-direction:column"><div style="font-weight:700">${f.name}</div><div style="font-size:12px;color:var(--muted)">${f.handle}</div></div>`;
+        favList.appendChild(el);
+      });
+    }
+
+    let posts = [...initialPosts];
+
+    function renderFeed(){
+      if(!feed) return;
+      feed.innerHTML = '';
+      posts.forEach(post=>{
+        const card = document.createElement('article');
+        card.className = 'post';
+        card.innerHTML = `
+          <div class="head">
+            <div class="user">
+              <img src="profile.jpg" alt="${post.user}" />
+              <div class="meta">
+                <div class="name">${post.user} <span style="color:var(--muted);font-weight:600;margin-left:8px">${post.handle}</span></div>
+                <div class="time">${post.time}</div>
+              </div>
+            </div>
+            <div class="dots">⋯</div>
+          </div>
+          <div class="content">${escapeHtml(post.text || '')}</div>
+        `;
+        /* (Media rendering, dots menu, footer actions remain SAME) */
+        if(post.media && post.media.length){
+          const mediaWrap = document.createElement('div');
+          mediaWrap.className = 'media';
+          if(post.media.length === 1){
+            if(isVideoFile(post.media[0])){
+              const v=document.createElement('video'); v.src=post.media[0]; v.controls=true; mediaWrap.appendChild(v);
+            } else {
+              const img=document.createElement('img'); img.src=post.media[0]; mediaWrap.appendChild(img);
+            }
+          }
+          card.appendChild(mediaWrap);
+        }
+        feed.appendChild(card);
+      });
+    }
+
+    function isVideoFile(fname){ return /\.(mp4|webm|ogg|mov)$/i.test(fname); }
+    function escapeHtml(text){ return text.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+    let selectedFiles = [];
+    if(mediaInput){
+      mediaInput.addEventListener('change', (e)=>{
+        selectedFiles = Array.from(e.target.files).slice(0,4);
+        showPreview();
+      });
+    }
+    function showPreview(){
+      previewWrap.innerHTML = '';
+      selectedFiles.forEach(file=>{
+        const url = URL.createObjectURL(file);
+        if(file.type.startsWith('video/')){
+          const v=document.createElement('video'); v.src=url; v.controls=true; v.className='two'; previewWrap.appendChild(v);
+        } else {
+          const img=document.createElement('img'); img.src=url; img.className='two'; previewWrap.appendChild(img);
+        }
+      });
+    }
+
+    if(postBtn){
+      postBtn.addEventListener('click', ()=>{
+        const text = tweetText.value.trim();
+        if(!text && selectedFiles.length === 0){ alert('Please add text or media to post.'); return; }
+        posts.unshift({id:Date.now(),user:'You',handle:'@you',time:'now',text,media:selectedFiles.map(f=>URL.createObjectURL(f))});
+        renderFeed();
+        tweetText.value=''; selectedFiles=[]; mediaInput.value=''; previewWrap.innerHTML='';
+      });
+    }
+
+    renderFavs();
+    renderFeed();
+  });
+  </script>

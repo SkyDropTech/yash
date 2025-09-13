@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SkyDrop Academies</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Londrina+Solid&display=swap" rel="stylesheet">
+  <!-- Chart.js for graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0d0d0d;
+      color: white;
+      font-family: 'Londrina Solid', cursive;
+      overflow-x: hidden;
+      height: 100vh;
+    }
+
+    /* Container flex */
+    .container { display: flex; min-height: 100vh; width: 100vw; }
+
+    /* Left sidebar */
+    aside.sidebar-left {
+      background: #121212;
+      width: 220px;
+      border-right: 1px solid #222;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-right: 10px;
+      position: fixed;
+      height: 100vh;
+      left: 0;
+      top: 0;
+      z-index: 100;
+    }
+    .sidebar-left .logo-container {
+      padding: 30px 0 30px 25px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sidebar-left .logo-container img { height: 150px; user-select: none; }
+    nav.sidebar-menu { margin-top: 50px; padding-left: 0; }
+    nav.sidebar-menu ul { list-style: none; margin: 0; }
+    nav.sidebar-menu ul li {
+      font-family: monospace;
+      font-weight: 400;
+      font-size: 17px;
+      color: #ddd;
+      padding: 30px 44px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+    }
+    nav.sidebar-menu ul li:hover,
+    nav.sidebar-menu ul li.active {
+      color: #2592cd;
+      background-color: #212121;
+    }
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 25px;
+      border-top: 1px solid #222;
+    }
+    .user-profile img {
+      width: 38px; height: 38px;
+      border-radius: 50%; object-fit: cover;
+    }
+    .user-profile span { font-size: 15px; font-family: monospace; font-weight: 600; }
+
+    /* Main content */
+    main.content {
+      flex: 1;
+      padding-top: 120px;
+      padding-left: 245px;
+      padding-right: 25px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .top-nav {
+      padding-top: 50px;
+      position: fixed;
+      top: 0; left: 220px;
+      width: calc(100vw - 220px);
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .top-nav ul {
+      list-style: none;
+      display: flex;
+      gap: 32px;
+      font-size: 20px;
+      color: #d1d5db;
+    }
+    .top-nav ul li a {
+      text-decoration: none;
+      color: #d1d5db;
+      transition: color 0.25s ease;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    .top-nav ul li a:hover { color: #2592cd; }
+
+    /* Right sidebar */
+    aside.sidebar-right {
+      width: 250px;
+      padding-left: 50px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      align-items: flex-start;
+      position: fixed;
+      top: 50%; right: 20px;
+      transform: translateY(-50%);
+    }
+    .year-item1, .year-item {
+      display: flex; align-items: center; gap: 20px;
+      cursor: pointer;
+      background-color: #2592cd;
+      border-radius: 40px;
+      width: 210px;
+      padding: 10px 20px;
+      font-weight: 700;
+      font-size: 20px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: translateX(40px);
+      animation-fill-mode: forwards;
+    }
+    .year-item { filter: blur(4px); }
+    .year-item1 img, .year-item img {
+      width: 56px; height: 56px;
+      border-radius: 50%; object-fit: cover;
+    }
+    .year-item1:nth-child(1) { animation: slideInRight 0.6s 0.2s forwards; }
+    .year-item:nth-child(2) { animation: slideInRight 0.6s 0.3s forwards; }
+    .year-item:nth-child(3) { animation: slideInRight 0.6s 0.5s forwards; }
+    .year-item:nth-child(4) { animation: slideInRight 0.6s 0.7s forwards; }
+    @keyframes slideInRight { to { opacity: 1; transform: translateX(0); } }
+
+    /* ---------- To Do List Section ---------- */
+    .todo-section {
+      margin-top: 50px;
+      width: 80%;
+      max-width: 800px;
+      background: #121212;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 18px rgba(0,0,0,0.6);
+    }
+    .todo-section h2 { font-size: 28px; margin-bottom: 20px; text-align:center; }
+
+    .todo-input {
+      display: flex; gap: 10px; margin-bottom: 20px;
+      background: #1e1e1e; padding: 12px; border-radius: 10px;
+    }
+    .todo-input input {
+      flex: 1; padding: 12px;
+      border: none; border-radius: 8px;
+      font-size: 16px;
+    }
+    .todo-input button {
+      padding: 12px 18px; border: none; border-radius: 8px;
+      background: #2592cd; color: white;
+      font-size: 16px; cursor: pointer;
+    }
+
+    ul#todo-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    ul#todo-list li {
+      background: #1c1c1c;
+      padding: 14px;
+      border-radius: 10px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 18px;
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
+    ul#todo-list li.completed { text-decoration: line-through; color: #888; }
+    ul#todo-list li button { background:none; border:none; color:#2592cd; cursor:pointer; }
+
+    .progress-bar { margin-top: 20px; background: #333; border-radius: 8px; overflow: hidden; }
+    .progress-fill { background: #2592cd; height: 14px; width: 0%; transition: width 0.4s ease; }
+
+    /* Pomodoro Timer */
+    .pomodoro { margin-top: 30px; text-align: center; }
+    .pomodoro h3 { margin-bottom: 10px; font-size: 24px; }
+    .timer { font-size: 36px; margin: 20px 0; color:#2592cd; }
+    .pomodoro button {
+      padding: 10px 18px; margin: 5px;
+      border: none; border-radius: 8px;
+      background: #2592cd; color: white;
+      font-size: 16px; cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .pomodoro button:hover { transform: translateY(-3px); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Left Sidebar -->
+    <aside class="sidebar-left">
+      <div class="logo-container"><img src="images/logosk.png" alt="Logo"></div>
+      <nav class="sidebar-menu">
+        <ul>
+          <li>Topper Notes</li>
+          <li>Books pdfs</li>
+          <li>Performance</li>
+          <li class="active">To Do List</li>
+        </ul>
+      </nav>
+      <div class="user-profile"><img src="images/boy1.jpg" alt="User"><span>Rishikesh</span></div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="content">
+      <nav class="top-nav">
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Academics</a></li>
+          <li><a href="#">Notices</a></li>
+          <li><a href="#">Resources</a></li>
+          <li><a href="#">Alumni</a></li>
+          <li><a href="#">App</a></li>
+          <li><a href="#">About Us</a></li>
+        </ul>
+      </nav>
+
+      <!-- To Do List Section -->
+      <section class="todo-section">
+        <h2>Gamified To-Do List</h2>
+        <div class="todo-input">
+          <input type="text" id="new-task" placeholder="Add a new task...">
+          <button onclick="addTask()">Add</button>
+        </div>
+        <ul id="todo-list"></ul>
+        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+        <!-- Pomodoro -->
+        <div class="pomodoro">
+          <h3>Pomodoro Timer</h3>
+          <div class="timer" id="timer">25:00</div>
+          <button onclick="startTimer()">Start</button>
+          <button onclick="pauseTimer()">Pause</button>
+          <button onclick="resetTimer()">Reset</button>
+          <br>
+          <button onclick="adjustTime(60)">+1 min</button>
+          <button onclick="adjustTime(-60)">-1 min</button>
+          <button onclick="adjustTime(3600)">+1 hr</button>
+          <button onclick="adjustTime(-3600)">-1 hr</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Right Sidebar -->
+    <aside class="sidebar-right">
+      <div class="year-item1"><img src="images/fe.jpg" alt=""><span>First Year</span></div>
+      <div class="year-item"><img src="images/se.jpg" alt=""><span>Second Year</span></div>
+      <div class="year-item"><img src="images/te.jpg" alt=""><span>Third Year</span></div>
+      <div class="year-item"><img src="images/be.jpg" alt=""><span>Fourth Year</span></div>
+    </aside>
+  </div>
+
+  <script>
+    // Task Management with Local Storage
+    const taskInput = document.getElementById('new-task');
+    const taskList = document.getElementById('todo-list');
+    const progressBar = document.getElementById('progress');
+
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    renderTasks();
+
+    function addTask() {
+      if (taskInput.value.trim() === '') return;
+      tasks.push({ text: taskInput.value, completed: false });
+      taskInput.value = '';
+      saveTasks();
+    }
+
+    function toggleTask(index) {
+      tasks[index].completed = !tasks[index].completed;
+      saveTasks();
+    }
+
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      saveTasks();
+    }
+
+    function saveTasks() {
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      renderTasks();
+    }
+
+    function renderTasks() {
+      taskList.innerHTML = '';
+      tasks.forEach((task, i) => {
+        const li = document.createElement('li');
+        li.className = task.completed ? 'completed' : '';
+        li.innerHTML = `
+          <span onclick="toggleTask(${i})">${task.text}</span>
+          <button onclick="deleteTask(${i})"><i class="fas fa-trash"></i></button>
+        `;
+        li.draggable = true;
+        taskList.appendChild(li);
+      });
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const completed = tasks.filter(t => t.completed).length;
+      const percent = tasks.length ? (completed / tasks.length) * 100 : 0;
+      progressBar.style.width = percent + '%';
+    }
+
+    // Drag and Drop
+    let dragged;
+    taskList.addEventListener("dragstart", e => dragged = e.target);
+    taskList.addEventListener("dragover", e => e.preventDefault());
+    taskList.addEventListener("drop", e => {
+      if (e.target.tagName === "LI") {
+        taskList.insertBefore(dragged, e.target.nextSibling);
+        const newOrder = [...taskList.children].map(li => {
+          const text = li.querySelector("span").textContent;
+          return tasks.find(t => t.text === text);
+        });
+        tasks = newOrder;
+        saveTasks();
+      }
+    });
+
+    // Pomodoro Timer
+    let timer;
+    let timeLeft = 25 * 60;
+    let isRunning = false;
+
+    function updateTimerDisplay() {
+      const hours = Math.floor(timeLeft / 3600);
+      const minutes = Math.floor((timeLeft % 3600) / 60);
+      const seconds = timeLeft % 60;
+      document.getElementById('timer').innerText =
+        String(hours).padStart(2, '0') + ":" +
+        String(minutes).padStart(2, '0') + ":" +
+        String(seconds).padStart(2, '0');
+    }
+
+    function startTimer() {
+      if (!isRunning && timeLeft > 0) {
+        isRunning = true;
+        timer = setInterval(() => {
+          if (timeLeft <= 0) {
+            clearInterval(timer);
+            isRunning = false;
+            alert("Pomodoro finished!");
+            timeLeft = 25 * 60;
+          } else {
+            timeLeft--;
+            updateTimerDisplay();
+          }
+        }, 1000);
+      }
+    }
+
+    function pauseTimer() {
+      clearInterval(timer);
+      isRunning = false;
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      isRunning = false;
+      timeLeft = 25 * 60;
+      updateTimerDisplay();
+    }
+
+    function adjustTime(seconds) {
+      timeLeft = Math.max(0, timeLeft + seconds);
+      updateTimerDisplay();
+    }
+
+    updateTimerDisplay();
+
+    // Notification permission
+    if ("Notification" in window) Notification.requestPermission();
+  </script>
+</body>
+</html>

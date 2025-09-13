@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SkyDrop Academies</title>
+    <!-- Font Awesome for PDF icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Londrina+Shadow&family=Londrina+Solid&family=Hanalei+Fill&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0d0d0d;
+            color: white;
+            font-family: 'Londrina Solid', cursive;
+            overflow-x: hidden;
+            height: 100vh;
+        }
+        
+        /* Container flex */
+        .container {
+            display: flex;
+            min-height: 100vh;
+            width: 100vw;
+        }
+        
+        /* Left sidebar - FIXED POSITION */
+        aside.sidebar-left {
+            background: #121212;
+            width: 220px;
+            border-right: 1px solid #222;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-right: 10px;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .sidebar-left .logo-container {
+            padding: 30px 0 30px 25px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .sidebar-left .logo-container img {
+            height: 150px;
+            user-select: none;
+        }
+        
+        nav.sidebar-menu {
+            margin-top: 50px;
+            padding-left: 0;
+        }
+        
+        nav.sidebar-menu ul {
+            list-style: none;
+            margin: 0px;
+        }
+        
+        nav.sidebar-menu ul li {
+            font-family: monospace;
+            font-weight: 400;
+            font-size: 17px;
+            color: #ddd;
+            padding: 30px 44px;
+            cursor: pointer;
+            letter-spacing: 0.04em;
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 6px;
+            transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        nav.sidebar-menu ul li:hover {
+            color: #2592cd;
+            background-color: #212121;
+            cursor: pointer;
+        }
+        
+        /* Animation keyframes for slide in from left */
+        @keyframes slideInFromLeft {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 25px;
+            border-top: 1px solid #222;
+            cursor: default;
+        }
+        
+        .user-profile img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .user-profile span {
+            font-size: 15px;
+            color: #fff;
+            font-family: monospace;
+            font-weight: 600;
+        }
+        
+        /* Main content - ADJUSTED FOR FIXED SIDEBAR */
+        main.content {
+            flex: 1;
+            padding-top: 120px;
+            padding-left: 245px; /* Increased to account for fixed sidebar */
+            padding-right: 25px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 0; /* Remove any margin */
+        }
+        
+        .top-nav {
+            padding-top: 50px;
+            position: fixed;
+            top: 0;
+            left: 220px; /* Adjusted for fixed sidebar */
+            width: calc(100vw - 220px);
+            height: 48px;
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .top-nav ul {
+            list-style: none;
+            display: flex;
+            gap: 32px;
+            font-family: 'Londrina Solid', cursive;
+            font-weight: 400;
+            font-size: 20px;
+            color: #d1d5db;
+        }
+        
+        .top-nav ul li a {
+            text-decoration: none;
+            color: #d1d5db;
+            transition: color 0.25s ease;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        
+        .top-nav ul li a:hover {
+            color: #2592cd;
+        }
+        
+        /* WELCOME TO heading */
+        .welcome-text {
+            font-family: 'Hanalei Fill', cursive;
+            font-weight: 400;
+            font-size: 44px;
+            margin-top: 12px;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            user-select: none;
+            word-spacing: 18px;
+            margin-right: 130px;
+        }
+        
+        .welcome-text .sky {
+            font-family: 'Londrina Solid', cursive;
+            font-weight: 700;
+            font-size: 44px;
+            color: #2592cd;
+            user-select: none;
+            word-spacing: 18px;
+            margin-left: 20px;
+        }
+        
+        .welcome-text .drop {
+            font-family: 'Londrina Shadow', cursive;
+            font-weight: 700;
+            font-size: 44px;
+            color: transparent;
+            -webkit-text-stroke: 1.2px white;
+            user-select: none;
+        }
+        
+        .welcome-text .academies {
+            font-family: 'Press Start 2P', cursive;
+            font-weight: 700;
+            font-size: 41px;
+            color: white;
+            user-select: none;
+            margin-left: 20px;
+        }
+        
+        .main-image {
+            margin-top: 21px;
+            width: 950px;
+            max-width: 130vw;
+            border-radius: 6%;
+            user-select: none;
+            object-fit: contain;
+            box-shadow: 0 0 15px #111;
+            margin-right: 150px;
+        }
+        
+        /* Bottom text below image */
+        .bottom-text {
+            margin-top: 22px;
+            text-align: center;
+            font-family: 'Londrina Solid', cursive;
+            font-weight: 700;
+            font-size: 16px;
+            max-width: 720px;
+            line-height: 1.3;
+            letter-spacing: 0.06em;
+            user-select: none;
+            color: white;
+            margin-right: 130px;
+        }
+        
+        /* Right sidebar container for year images + text */
+        aside.sidebar-right {
+            width: 250px;
+            background: transparent;
+            padding-left: 50px;
+            margin-right: -30px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            align-items: flex-start;
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+        }
+        
+        /* Each right sidebar item */
+        .year-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            background-color: #2592cd;
+            border-radius: 40px;
+            width: 210px;
+            padding: 10px 20px;
+            color: white;
+            font-family: 'Londrina Solid', cursive;
+            font-weight: 700;
+            font-size: 20px;
+            user-select: none;
+            box-shadow: 0 0 12px rgba(0,0,0,0.4);
+            opacity: 0;
+            transform: translateX(40px);
+            animation-fill-mode: forwards;
+            animation-timing-function: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        
+        /* Image in right sidebar item */
+        .year-item img {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            box-shadow: 0 0 8px #000;
+        }
+        
+        /* Slide in animations with stagger */
+        .year-item:nth-child(1) {
+            animation-name: slideInRight;
+            animation-duration: 0.6s;
+            animation-delay: 0.2s;
+        }
+        
+        .year-item:nth-child(2) {
+            animation-name: slideInRight;
+            animation-duration: 0.6s;
+            animation-delay: 0.3s;
+        }
+        
+        .year-item:nth-child(3) {
+            animation-name: slideInRight;
+            animation-duration: 0.6s;
+            animation-delay: 0.5s;
+        }
+        
+        .year-item:nth-child(4) {
+            animation-name: slideInRight;
+            animation-duration: 0.6s;
+            animation-delay: 0.7s;
+        } 
+        @keyframes slideInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Hover for right sidebar items */
+        .year-item:hover {
+            background-color: #2592cd;
+            color: white;
+            box-shadow: 0 0 18px #2592cd;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" role="main">
+        <!-- Left Sidebar -->
+        <aside class="sidebar-left" aria-label="Sidebar Navigation">
+            <div class="logo-container" aria-label="Logo">
+                <img src="images/logosk.png" alt="SkyDrop Logo">
+            </div>
+            <nav class="sidebar-menu" aria-label="Main menu">
+                <ul>
+                    <li class="active">Topper Notes</li>
+                    <li>Books pdfs</li>
+                    <li>Performance</li>
+                    <li>To Do List</li>
+                </ul>
+            </nav>
+            <div class="user-profile" aria-label="User profile">
+                <img src="images/boy1.jpg" alt="User profile picture">
+                <span>Rishikesh</span>
+            </div>
+        </aside>
+        
+        <!-- Main content -->
+        <main class="content" aria-label="Main content area">
+            <nav class="top-nav" aria-label="Top main navigation">
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Academics</a></li>
+                    <li><a href="#">Notices</a></li>
+                    <li><a href="#">Resources</a></li>
+                    <li><a href="#">Alumni</a></li>
+                    <li><a href="#">App</a></li>
+                    <li><a href="#">About Us</a></li>
+                </ul>
+            </nav>
+            
+            <div class="welcome-text" aria-label="Welcome text">
+                WELCOME TO<span class="sky"> Sky</span><span class="drop">Drop</span><span class="academies"> ACADEMIES</span>
+            </div>
+            
+            <img src="images/academic1.jpg" alt="Academic workspace book and laptop" class="main-image">
+            
+            <p class="bottom-text" aria-label="Summary text">
+                Your ultimate hub for mastering assignments, projects, notes, and academic performance. Stay organized, track deadlines, and elevate your learning experience to the next level.
+            </p>
+        </main>
+        
+        <!-- Right sidebar with year images and text -->
+        <aside class="sidebar-right" aria-label="Year selection menu">
+            <div class="year-item" role="button" tabindex="0" aria-label="First Year">
+                <img src="images/fe.jpg" alt="First Year">
+                <span>First Year</span>
+            </div>
+            <div class="year-item" role="button" tabindex="0" aria-label="Second Year">
+                <img src="images/se.jpg" alt="Second Year">
+                <span>Second Year</span>
+            </div>
+            <div class="year-item" role="button" tabindex="0" aria-label="Third Year">
+                <img src="images/te.jpg" alt="Third Year">
+                <span>Third Year</span>
+            </div>
+            <div class="year-item" role="button" tabindex="0" aria-label="Fourth Year">
+                <img src="images/be.jpg" alt="Fourth Year">
+                <span>Fourth Year</span>
+            </div>
+        </aside>
+    </div>
+    
+    <script>
+        // JavaScript to toggle "active" class on sidebar menu items for persistent animation
+        const menuItems = document.querySelectorAll('nav.sidebar-menu ul li');
+        
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                menuItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

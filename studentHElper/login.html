@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkyDrop Login</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Londrina+Solid&family=Londrina+Shadow&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0d0d0d;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      justify-content: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 30px;
+      opacity: 0;
+      transform: translateX(-100px);
+      animation: slideLogo 7s ease forwards;
+    }
+    .logo img { height: 50px; }
+    .logo-text { font-size: 36px; font-weight: 700; }
+    .logo-text .sky { font-family: 'Londrina Solid', cursive; color: #2592cd; }
+    .logo-text .drop { font-family: 'Londrina Shadow', cursive; color: #ffffffde; }
+    @keyframes slideLogo { 0% {opacity:0; transform:translateX(-100px);} 100% {opacity:1; transform:translateX(0);} }
+
+    .login-container {
+      display: flex;
+      width: 90%;
+      max-width: 950px;
+      background: rgba(0,0,0,0.6);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .login-container img { width: 50%; object-fit: cover; }
+
+    .form-box {
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: rgba(28, 28, 28, 0.982);
+    }
+
+    .animated-header {
+      font-family: 'Inter', sans-serif;
+      color: white;
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 30px;
+      opacity: 0;
+      transform: translateY(50px);
+      animation: moveUp 2.4s forwards;
+      animation-delay: 0.5s;
+    }
+    @keyframes moveUp { 0% { transform: translateY(50px); opacity:0;} 100% { transform:translateY(0); opacity:1;} }
+
+    .input-group { position: relative; margin-bottom: 20px; }
+    .input-group i {
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      transform: translateY(-50%);
+      color: #2592cd;
+      font-size: 18px;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 12px 12px 12px 40px;
+      border: none;
+      outline: none;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    .input-group input:hover, .input-group input:focus { box-shadow: 0 0 8px #2592cd; }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: #1E90FF;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 18px;
+      font-family: 'Londrina Solid', cursive;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .login-btn:hover { background: #0070d1; }
+    .login-btn:active { background: #3399ff; }
+
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #1E90FF;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      display: none;
+      font-weight: bold;
+      box-shadow: 0 0 12px rgba(0,0,0,0.5);
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(-20px);} to { opacity:1; transform:translateY(0);} }
+  </style>
+</head>
+<body>
+
+  <div class="logo">
+    <img src="images/logosk.png" alt="SkyDrop Logo">
+    <div class="logo-text">
+      <span class="sky">Sky</span><span class="drop">Drop</span>
+    </div>
+  </div>
+
+  <div class="login-container">
+    <img src="images/log1.jpg" alt="Login Illustration">
+
+    <div class="form-box">
+      <h2 class="animated-header">Your academic journey continues here.</h2>
+
+      <form id="loginForm">
+        <div class="input-group">
+          <i class="fa fa-user"></i>
+          <input type="text" placeholder="Full Name" id="name" required>
+        </div>
+        <div class="input-group">
+          <i class="fa fa-at"></i>
+          <input type="text" placeholder="Handle @(name)" id="handle" required>
+        </div>
+        <div class="input-group">
+          <i class="fa fa-envelope"></i>
+          <input type="email" placeholder="Gmail" id="email" required>
+        </div>
+        <div class="input-group">
+          <i class="fa fa-lock"></i>
+          <input type="password" placeholder="Password" id="password" required>
+        </div>
+        <button class="login-btn" onclick="window.location.href='home.html'">Submit</button>
+
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">✅ Login Successful!</div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const toast = document.getElementById('toast');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Get input values
+      const name = document.getElementById('name').value.trim();
+      const handle = document.getElementById('handle').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if(!name || !handle || !email || !password){
+        alert("Please fill all fields!");
+        return;
+      }
+
+      // Store in localStorage
+      const userData = { name, handle, email, password };
+      localStorage.setItem('skyUser', JSON.stringify(userData));
+
+      // Show success toast
+      toast.style.display = 'block';
+
+      // Redirect after 4s
+      setTimeout(() => {
+        window.location.href = "skydrop.html";
+      }, 4000);
+    });
+  </script>
+
+</body>
+</html>

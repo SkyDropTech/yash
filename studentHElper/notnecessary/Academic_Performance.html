@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SkyDrop Academies</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Londrina+Solid&display=swap" rel="stylesheet">
+  <!-- Chart.js for graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0d0d0d;
+      color: white;
+      font-family: 'Londrina Solid', cursive;
+      overflow-x: hidden;
+      height: 100vh;
+    }
+
+    /* Container flex */
+    .container { display: flex; min-height: 100vh; width: 100vw; }
+
+    /* Left sidebar - FIXED POSITION */
+    aside.sidebar-left {
+      background: #121212;
+      width: 220px;
+      border-right: 1px solid #222;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-right: 10px;
+      position: fixed;
+      height: 100vh;
+      left: 0;
+      top: 0;
+      z-index: 100;
+    }
+        
+    .sidebar-left .logo-container {
+      padding: 30px 0 30px 25px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+        
+    .sidebar-left .logo-container img {
+      height: 150px;
+      user-select: none;
+    }
+        
+    nav.sidebar-menu {
+      margin-top: 50px;
+      padding-left: 0;
+    }
+        
+    nav.sidebar-menu ul {
+      list-style: none;
+      margin: 0px;
+    }
+        
+    nav.sidebar-menu ul li {
+      font-family: monospace;
+      font-weight: 400;
+      font-size: 17px;
+      color: #ddd;
+      padding: 30px 44px;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 6px;
+      transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+        
+    nav.sidebar-menu ul li:hover {
+      color: #2592cd;
+      background-color: #212121;
+      cursor: pointer;
+    }
+    nav.sidebar-menu ul li.active {
+      color: #2592cd;
+      background-color: #212121;
+      cursor: pointer;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 25px;
+      border-top: 1px solid #222;
+      cursor: default;
+    }
+        
+    .user-profile img {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+        
+    .user-profile span {
+      font-size: 15px;
+      color: #fff;
+      font-family: monospace;
+      font-weight: 600;
+    }
+
+    /* Main content - ADJUSTED FOR FIXED SIDEBAR */
+    main.content {
+      flex: 1;
+      padding-top: 120px;
+      padding-left: 245px; /* Increased to account for fixed sidebar */
+      padding-right: 25px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-left: 0; /* Remove any margin */
+    }
+        
+    .top-nav {
+      padding-top: 50px;
+      position: fixed;
+      top: 0;
+      left: 220px; /* Adjusted for fixed sidebar */
+      width: calc(100vw - 220px);
+      height: 48px;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+        
+    .top-nav ul {
+      list-style: none;
+      display: flex;
+      gap: 32px;
+      font-family: 'Londrina Solid', cursive;
+      font-weight: 400;
+      font-size: 20px;
+      color: #d1d5db;
+    }
+        
+    .top-nav ul li a {
+      text-decoration: none;
+      color: #d1d5db;
+      transition: color 0.25s ease;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+        
+    .top-nav ul li a:hover {
+      color: #2592cd;
+    }
+
+    /* Right sidebar container for year images + text */
+    aside.sidebar-right {
+      width: 250px;
+      background: transparent;
+      padding-left: 50px;
+      margin-right: -30px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      align-items: flex-start;
+      position: fixed;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+    }
+    .year-item1 {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      cursor: pointer;
+      background-color: #2592cd;
+      border-radius: 40px;
+      width: 210px;
+      padding: 10px 20px;
+      color: white;
+      font-family: 'Londrina Solid', cursive;
+      font-weight: 700;
+      font-size: 20px;
+      user-select: none;
+      box-shadow: 0 0 12px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: translateX(40px);
+      animation-fill-mode: forwards;
+      animation-timing-function: cubic-bezier(0.68, -0.55, 0.27, 1.55); 
+    }
+        
+    .year-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      cursor: pointer;
+      background-color: #2592cd;
+      border-radius: 40px;
+      width: 210px;
+      padding: 10px 20px;
+      color: white;
+      font-family: 'Londrina Solid', cursive;
+      font-weight: 700;
+      font-size: 20px;
+      user-select: none;
+      box-shadow: 0 0 12px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: translateX(40px);
+      animation-fill-mode: forwards;
+      animation-timing-function: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      filter: blur(4px)
+    }
+    .year-item1 img,
+    .year-item img {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      box-shadow: 0 0 8px #000;
+    }
+        
+    .year-item1:nth-child(1) {
+      animation-name: slideInRight;
+      animation-duration: 0.6s;
+      animation-delay: 0.2s;
+    }
+        
+    .year-item:nth-child(2) {
+      animation-name: slideInRight;
+      animation-duration: 0.6s;
+      animation-delay: 0.3s;
+    }
+        
+    .year-item:nth-child(3) {
+      animation-name: slideInRight;
+      animation-duration: 0.6s;
+      animation-delay: 0.5s;
+    }
+        
+    .year-item:nth-child(4) {
+      animation-name: slideInRight;
+      animation-duration: 0.6s;
+      animation-delay: 0.7s;
+    } 
+    @keyframes slideInRight {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+        
+    .year-item:hover {
+      background-color: #2592cd;
+      color: white;
+      box-shadow: 0 0 18px #2592cd;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Dashboard Cards */
+    .dashboard { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-top: 30px; }
+    .card {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.4);
+    }
+    .card h2 { font-size: 22px; margin-bottom: 15px; }
+
+    /* --- Performance Card Refinements --- */
+    .performance-card {
+      padding: 25px 30px;
+    }
+
+    .performance-card h2 {
+      font-size: 26px;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .performance-card .metrics {
+      display: flex;
+      gap: 25px;
+      margin-bottom: 25px;
+    }
+
+    .performance-card .metric-card {
+      flex: 1;
+      background: #2b2b2b;
+      border-radius: 12px;
+      padding: 20px 15px;
+      text-align: center;
+      transition: transform 0.2s ease, background 0.3s ease;
+    }
+
+    .performance-card .metric-card:hover {
+      background: #323232;
+      transform: translateY(-4px);
+    }
+
+    .performance-card .metric-card h3 {
+      font-size: 30px;
+      margin-bottom: 12px;
+      color: #2592cd;
+    }
+
+    .performance-card .metric-card p {
+      font-size: 15px;
+      color: #ccc;
+      letter-spacing: 0.3px;
+    }
+
+    /* Exam list */
+    .exam-list { list-style: none; }
+    .exam-list li {
+      background: #262626;
+      margin-bottom: 12px;
+      padding: 15px;
+      border-radius: 8px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .exam-list li span { font-size: 14px; }
+    .exam-list li button {
+      background: #2592cd; border: none; color: white;
+      padding: 6px 12px; border-radius: 5px; cursor: pointer;
+    }
+    .exam-list li button:hover { background: #1d7aad; }
+
+    /* Results table */
+    .results-table { width: 100%; border-collapse: collapse; }
+    .results-table th, .results-table td {
+      padding: 10px; border-bottom: 1px solid #333; text-align: left;
+    }
+    .results-table th { background: #222; }
+    .results-table tr:hover { background: #1e1e1e; }
+
+    /* Calendar (mockup) */
+    .calendar {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+    }
+    .calendar div {
+      padding: 20px; background: #262626;
+      text-align: center; border-radius: 6px;
+    }
+    .calendar div.highlight { background: #2592cd; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Left Sidebar -->
+    <aside class="sidebar-left">
+      <div class="logo-container"><img src="images/logosk.png" alt="Logo"></div>
+      <nav class="sidebar-menu">
+        <ul>
+          <li>Topper Notes</li>
+          <li>Books pdfs</li>
+          <li class="active">Performance</li>
+          <li>To Do List</li>
+        </ul>
+      </nav>
+      <div class="user-profile"><img src="images/boy1.jpg" alt="User"><span>Rishikesh</span></div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="content">
+      <nav class="top-nav">
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Academics</a></li>
+          <li><a href="#">Notices</a></li>
+          <li><a href="#">Resources</a></li>
+          <li><a href="#">Alumni</a></li>
+          <li><a href="#">App</a></li>
+          <li><a href="#">About Us</a></li>
+        </ul>
+      </nav>
+
+      <!-- Dashboard -->
+      <section class="dashboard">
+        <!-- Performance -->
+        <div class="card performance-card">
+          <h2>Your Performance</h2>
+          <div class="metrics">
+            <div class="metric-card">
+              <h3>85%</h3>
+              <p>Recent Score</p>
+            </div>
+            <div class="metric-card">
+              <h3>92</h3>
+              <p>Percentile</p>
+            </div>
+            <div class="metric-card">
+              <h3>2h 15m</h3>
+              <p>Time Spent</p>
+            </div>
+          </div>
+          <canvas id="performanceChart" height="120"></canvas>
+        </div>
+
+        <!-- Upcoming Exams -->
+        <div class="card">
+          <h2>Upcoming Exams</h2>
+          <ul class="exam-list">
+            <li><span>Maths Test - Sept 10</span><button>Register</button></li>
+            <li><span>Physics Mock - Sept 15</span><button>View Syllabus</button></li>
+            <li><span>Chemistry Quiz - Sept 20</span><button>Registered</button></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Results Breakdown -->
+      <section class="card" style="margin-top:40px;">
+        <h2>My Results</h2>
+        <table class="results-table">
+          <thead><tr><th>Exam</th><th>Date</th><th>Score</th><th>Percentile</th></tr></thead>
+          <tbody>
+            <tr><td>Maths Test</td><td>Aug 25</td><td>88%</td><td>94</td></tr>
+            <tr><td>Physics Mock</td><td>Aug 15</td><td>76%</td><td>85</td></tr>
+            <tr><td>Chemistry Quiz</td><td>Aug 5</td><td>91%</td><td>96</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Exam Schedule -->
+      <section class="card" style="margin-top:40px;">
+        <h2>Exam Schedule</h2>
+        <div class="calendar">
+          <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+          <div></div><div>1</div><div>2</div><div class="highlight">3</div><div>4</div><div>5</div><div>6</div>
+          <div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div><div>15</div><div>16</div>
+          <div>17</div><div>18</div><div>19</div><div>20</div><div>21</div><div>22</div><div>23</div><div>24</div><div>25</div><div>26</div>
+          <div>27</div><div>28</div><div>29</div><div>30</div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Right Sidebar -->
+    <aside class="sidebar-right">
+      <div class="year-item1"><img src="images/fe.jpg" alt=""><span>First Year</span></div>
+      <div class="year-item"><img src="images/se.jpg" alt=""><span>Second Year</span></div>
+      <div class="year-item"><img src="images/te.jpg" alt=""><span>Third Year</span></div>
+      <div class="year-item"><img src="images/be.jpg" alt=""><span>Fourth Year</span></div>
+    </aside>
+  </div>
+
+  <script>
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Exam 1','Exam 2','Exam 3','Exam 4','Exam 5'],
+        datasets: [{
+          label: 'Score %',
+          data: [72, 78, 85, 81, 88],
+          borderColor: '#2592cd',
+          backgroundColor: 'rgba(37,146,205,0.2)',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, max: 100 }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
