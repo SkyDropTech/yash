@@ -58,17 +58,23 @@
     }
     nav ul li a:hover { color: #1E90FF; }
 
-    .login-btn {
+    /* User Profile */
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-family: 'Londrina Solid', cursive;
-      font-size: 20px;
-      padding: 12px 28px;
-      background: #1E90FF;
-      color: #ffffffdd;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
+      font-size: 18px;
+      color: #fff;
     }
-    .login-btn:hover { background: #0070d1; }
+
+    .user-profile img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #1E90FF;
+    }
 
     /* Alumni Section */
 .alumni {
@@ -238,7 +244,11 @@
         <li><a href="about.html">About Us</a></li>
       </ul>
     </nav>
-    <button onclick="login.html" class="login-btn">Login</button>
+    <!-- User Profile -->
+    <div class="user-profile">
+      <img src="images/profilephoto1.png" alt="Rishikesh Profile">
+      <span>Rishikesh</span>
+    </div>
   </header>
 
 <section class="alumni">
@@ -257,7 +267,7 @@
     <!-- CARD 1 -->
     <div class="alumni-card">
       <div class="alumni-photo">
-        <img src="images/se.jpg" alt="Alumni 1">
+        <img src="images/alumni10.jpeg" alt="Alumni 1">
       </div>
       <h3>John Doe</h3>
       <p>Software Engineer @ Google</p>
@@ -271,7 +281,7 @@
     <!-- CARD 2 -->
     <div class="alumni-card">
       <div class="alumni-photo">
-        <img src="images/alumni2.jpg" alt="Alumni 2">
+        <img src="images/alumni1.jpg" alt="Alumni 2">
       </div>
       <h3>Jane Smith</h3>
       <p>Data Scientist @ Microsoft</p>
@@ -285,7 +295,7 @@
     <!-- CARD 3 -->
     <div class="alumni-card">
       <div class="alumni-photo">
-        <img src="images/alumni3.jpg" alt="Alumni 3">
+        <img src="images/alumni2.jpg" alt="Alumni 3">
       </div>
       <h3>Rahul Mehta</h3>
       <p>Product Manager @ Meta</p>
@@ -299,7 +309,7 @@
     <!-- CARD 4 -->
     <div class="alumni-card">
       <div class="alumni-photo">
-        <img src="images/alumni2.jpg" alt="Alumni 2">
+        <img src="images/alumni3.jpg" alt="Alumni 2">
       </div>
       <h3>Jane Smith</h3>
       <p>Data Scientist @ Microsoft</p>
@@ -312,7 +322,7 @@
     <!-- CARD 5 -->
     <div class="alumni-card">
       <div class="alumni-photo">
-        <img src="images/alumni2.jpg" alt="Alumni 2">
+        <img src="images/alumni4.jpg" alt="Alumni 2">
       </div>
       <h3>Jane Smith</h3>
       <p>Data Scientist @ Microsoft</p>
@@ -325,7 +335,7 @@
     <!-- CARD 6 -->
     <div class="alumni-card">
       <div class="alumni-photo">
-        <img src="images/alumni2.jpg" alt="Alumni 2">
+        <img src="images/alumni5.jpg" alt="Alumni 2">
       </div>
       <h3>Jane Smith</h3>
       <p>Data Scientist @ Microsoft</p>
@@ -338,7 +348,7 @@
     <!-- CARD 7 -->
     <div class="alumni-card">
       <div class="alumni-photo">
-        <img src="images/alumni2.jpg" alt="Alumni 2">
+        <img src="images/alumni6.jpg" alt="Alumni 2">
       </div>
       <h3>Jane Smith</h3>
       <p>Data Scientist @ Microsoft</p>
@@ -351,7 +361,7 @@
     <!-- CARD 8 -->
     <div class="alumni-card">
       <div class="alumni-photo">
-        <img src="images/alumni2.jpg" alt="Alumni 2">
+        <img src="images/alumni7.png" alt="Alumni 2">
       </div>
       <h3>Jane Smith</h3>
       <p>Data Scientist @ Microsoft</p>
@@ -364,7 +374,7 @@
     <!-- CARD 9 -->
     <div class="alumni-card">
       <div class="alumni-photo">
-        <img src="images/alumni2.jpg" alt="Alumni 2">
+        <img src="images/alumni8.jpg" alt="Alumni 2">
       </div>
       <h3>Jane Smith</h3>
       <p>Data Scientist @ Microsoft</p>
@@ -377,7 +387,7 @@
     <!-- CARD 10 -->
     <div class="alumni-card">
       <div class="alumni-photo">
-        <img src="images/alumni2.jpg" alt="Alumni 2">
+        <img src="images/alumni9.jpg" alt="Alumni 2">
       </div>
       <h3>Jane Smith</h3>
       <p>Data Scientist @ Microsoft</p>
@@ -390,7 +400,7 @@
     <!-- CARD 11 -->
     <div class="alumni-card">
       <div class="alumni-photo">
-        <img src="images/alumni2.jpg" alt="Alumni 2">
+        <img src="images/alumni11.jpg" alt="Alumni 2">
       </div>
       <h3>Jane Smith</h3>
       <p>Data Scientist @ Microsoft</p>
@@ -400,32 +410,7 @@
         <a href="#" target="_blank"><i class="fab fa-github"></i></a>
       </div>
     </div>
-    <!-- CARD 12 -->
-    <div class="alumni-card">
-      <div class="alumni-photo">
-        <img src="images/alumni2.jpg" alt="Alumni 2">
-      </div>
-      <h3>Jane Smith</h3>
-      <p>Data Scientist @ Microsoft</p>
-      <div class="socials">
-        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
-        <a href="#" target="_blank"><i class="fab fa-github"></i></a>
-      </div>
-    </div>
-    <!-- CARD 13 -->
-    <div class="alumni-card">
-      <div class="alumni-photo">
-        <img src="images/alumni2.jpg" alt="Alumni 2">
-      </div>
-      <h3>Jane Smith</h3>
-      <p>Data Scientist @ Microsoft</p>
-      <div class="socials">
-        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
-        <a href="#" target="_blank"><i class="fab fa-github"></i></a>
-      </div>
-    </div>
+ 
 
 
 
